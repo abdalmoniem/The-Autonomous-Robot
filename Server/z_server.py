@@ -1,4 +1,4 @@
-!/usr/bin/env python
+#!/usr/bin/env python
 import sys
 import time
 import socket
@@ -20,7 +20,7 @@ autonomus = False
 sensors_data = ["null", "null", "null", "null"]
 
 class SigFinish(Exception):
-    pass
+	pass
 
 def get_sensors_data():
 	imu_thread = th.Thread(target = get_imu_data)
@@ -32,12 +32,12 @@ def get_sensors_data():
 	gps_thread.start()
 
 def get_imu_data():
-   while 1:
-      try:
-         sensors_data[0] = get_imu_readings("lin_acc")
-  	      sensors_data[1] = get_imu_readings("heading")
-	   except:
-		   pass
+	while 1:
+		try:
+			sensors_data[0] = get_imu_readings("lin_acc")
+			sensors_data[1] = get_imu_readings("heading")
+		except:
+			pass
 
 def get_gps_data():
 	while 1:
@@ -50,41 +50,42 @@ def get_gps_data():
 def move_robot():
 	global target_lat
 	global target_lon
+	
 	try:
 		while sensors_data[2] != target_lat and sensors_data[3] != target_lon:
 			distance, heading = geo_vector(sensors_data[2], sensors_data[3], target_lat, target_lon, "F")
-       			m0, m1 = heading_controller(float(sensors_data[1]), float(heading))
+			m0, m1 = heading_controller(float(sensors_data[1]), float(heading))
 
 			control_motor(0, m0)
-        		control_motor(1, m1)
+			control_motor(1, m1)
 			time.sleep(0.1)
 	except SigFinish:
 		print "Stopping motors for new location..."
 		control_motor(0, 0)
-	       	control_motor(1, 0)
+		control_motor(1, 0)
 
 def interrupt_thread(thread):
-    for thread_id, frame in sys._current_frames().items():
-	if thread_id == thread.ident:  # Note: Python 2.6 onwards
-            set_trace_for_frame_and_parents(frame, throw_signal_function)
+	for thread_id, frame in sys._current_frames().items():
+		if thread_id == thread.ident:  # Note: Python 2.6 onwards
+			set_trace_for_frame_and_parents(frame, throw_signal_function)
 
 def throw_signal_function(frame, event, arg):
-    raise SigFinish()
+	raise SigFinish()
 
 def do_nothing_trace_function(frame, event, arg):
-    # Note: each function called will actually call this function
-    # so, take care, your program will run slower because of that.
-    return None
+ # Note: each function called will actually call this function
+ # so, take care, your program will run slower because of that.
+ return None
 
 def set_trace_for_frame_and_parents(frame, trace_func):
-    # Note: this only really works if there's a tracing function set in this
-    # thread (i.e.: sys.settrace or threading.settrace must have set the
-    # function before)
-    while frame:
-        if frame.f_trace is None:
-            frame.f_trace = trace_func
-        frame = frame.f_back
-    del frame
+	# Note: this only really works if there's a tracing function set in this
+	# thread (i.e.: sys.settrace or threading.settrace must have set the
+	# function before)
+	while frame:
+ 		if frame.f_trace is None:
+	 		frame.f_trace = trace_func
+	 		frame = frame.f_back
+	 		del frame
 
 control_thread = th.Thread(target = move_robot)
 control_thread.daemon = True
@@ -105,7 +106,7 @@ def client_thread(conn, addr):
 				target_lat = float(data.rstrip().split("lat")[1])
 				autonomus = True
 			elif not data.rstrip().find("lon"):
-            target_lon = float(data.rstrip().split("lon")[1])
+				target_lon = float(data.rstrip().split("lon")[1])
 				autonomus = True
 			else:
 				autonomus = False
@@ -124,9 +125,9 @@ def client_thread(conn, addr):
 				control_motor(0, -speed)
 				control_motor(1, 0)			
 			elif data.rstrip() == "stop":
-        	   control_motor(0, 0)
-            control_motor(1, 0)
-		
+				control_motor(0, 0)
+				control_motor(1, 0)
+
 			if autonomus:
 				if sensors_data[1] != "null" and sensors_data[2] != "null" and sensors_data[3] != "null":
 					if not started:
@@ -137,14 +138,14 @@ def client_thread(conn, addr):
 
 				else:
 					print "I don't have sufficient data, cant move right now."
-		else:
-			break
+			else:
+				break
 
 	#came out of loop
 	print "Client %s disconnected." %addr[0]
 	conn.close()
 
-#############################__Main Thread__#############################
+################__Main Thread__#############################
 if len(sys.argv) != 3:
 	print "Usage: python server.py <interface> <port number>"
 	sys.exit(0)
@@ -163,11 +164,11 @@ try:
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	print "Socket created."
-	 
+
 	#Bind socket to local host and port
 	s.bind((HOST, PORT))
 	print "Socket bind complete."
-   
+
 	#Start listening on socket
 	s.listen(10)
 	ni.ifaddresses(INTERFACE)
@@ -182,19 +183,19 @@ except ValueError as ve:
 	print "Error: %s" %ve
 	sys.exit(0)
 
-while 1:
-	try:
+	while 1:
+		try:
 		#wait to accept a connection - blocking call
-		conn, addr = s.accept()
-		print "%s is now connected." %addr[0]
-	except KeyboardInterrupt:
-		print "\nClosing server..."
-		print "Stopping motors..."
-		s.close()
-		control_motor(0, 0)
-		control_motor(1, 0)
-		print "Server closed."
-		print "Motors stopped."
-		sys.exit(0)
+			conn, addr = s.accept()
+			print "%s is now connected." %addr[0]
+		except KeyboardInterrupt:
+			print "\nClosing server..."
+			print "Stopping motors..."
+			s.close()
+			control_motor(0, 0)
+			control_motor(1, 0)
+			print "Server closed."
+			print "Motors stopped."
+			sys.exit(0)
 
-	start_new_thread(client_thread, (conn, addr))
+		start_new_thread(client_thread, (conn, addr))
