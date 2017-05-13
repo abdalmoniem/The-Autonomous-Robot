@@ -1,20 +1,22 @@
 # The Autonomous Robot
 
+![The Autonomous Robot Screenshot](https://raw.githubusercontent.com/abdalmoniem/The Autonomous Robot/master/assets/robot.png)
+
 A simple autonomous robot that plays capture the flag.
 
 ## Platform:
-The robot's brains is the `Raspberry Pi 3` but it can run on bretty much an linux platform given that it supports the attached hardware on the robot.
+The robot's brains is the `Raspberry Pi 3` but it can run on bretty much any linux platform given that it supports the attached hardware on the robot.
 
 ## Hardware:
 The robot's hardware consists of:
 
-######1. 4x 6v 133 RPM DC Motors.
-######2. 1x Adafruit GPS breakout board.
-######3. 1x Adafruit BNO555 IMU board.
-######4. 1x Pololu Qik2s12v10 dual motor controller board.
-######5. 1x Step down DC-DC converter.
-######6. 1x Raspberry Pi 3 board.
-######7. 1x 7.2v 5200Ah battery pack.
+1. 4x 6v 133 RPM DC Motors.
+2. 1x Adafruit GPS breakout board.
+3. 1x Adafruit BNO555 IMU board.
+4. 1x Pololu Qik2s12v10 dual motor controller board.
+5. 1x Step down DC-DC converter.
+6. 1x Raspberry Pi 3 board.
+7. 1x 7.2v 5200Ah battery pack.
 
 ## Software Installation:
 1. make sure you you have python 2.7 on your system.
