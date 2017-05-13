@@ -1,6 +1,6 @@
 # The Autonomous Robot
 
-![The Autonomous Robot Screenshot](https://raw.githubusercontent.com/abdalmoniem/The Autonomous Robot/master/assets/robot.png)
+![The Autonomous Robot Screenshot](https://raw.githubusercontent.com/abdalmoniem/The%20Autonomous%20Robot/master/assets/robot.jpg)
 
 A simple autonomous robot that plays capture the flag.
 
